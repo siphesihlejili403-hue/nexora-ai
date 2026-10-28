@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Hardware Dashboard Platform</title>
+  <style>
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #050a14;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* Mobile Container App Frame */
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background-color: #070e1c;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 90px;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Page View Containers */
+    .page-view {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .page-view.active {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       HOME PAGE STYLES
+       ========================================================================== */
+    .header-ticker {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(11, 23, 42, 0.8);
+      border-bottom: 1px solid #14243b;
+      gap: 12px;
+    }
+
+    .audio-icon-btn {
+      background: #0f2744;
+      border: 1px solid #1c3c66;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38bdf8;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .ticker-text {
+      font-size: 13px;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+    }
+
+    .tabs-wrapper {
+      padding: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tabs-list {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+    }
+
+    .tab-btn {
+      background: #0e1e36;
+      border: 1px solid #1a3254;
+      color: #cbd5e1;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
+    }
+
+    .cards-container {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #0d1b2e 0%, #091322 100%);
+      border: 1px solid #182e4b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #14263e;
+      background: rgba(15, 30, 52, 0.5);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .badge-days {
+      background: #0284c7;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+
+    .card-body {
+      display: flex;
+      padding: 16px;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .chip-image-container {
+      width: 110px;
+      height: 110px;
+      background: #040914;
+      border: 1px solid #132742;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-details {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .detail-label {
+      color: #94a3b8;
+    }
+
+    .status-in-stock {
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .value-white {
+      color: #94a3b8;
+    }
+
+    .value-revenue {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    .value-lease {
+      color: #eab308;
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       PROFILE PAGE STYLES (SCREENSHOT 2)
+       ========================================================================== */
+    .profile-header {
+      padding: 24px 20px 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+    }
+
+    .avatar-glow-ring {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #0284c7 0%, #0369a1 60%, transparent 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+      flex-shrink: 0;
+    }
+
+    .avatar-text {
+      font-weight: 900;
+      font-size: 22px;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
+    }
+
+    .user-id {
+      font-size: 22px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 0.5px;
+    }
+
+    .user-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .vip-badge {
+      background: rgba(2, 132, 199, 0.2);
+      border: 1px solid #0284c7;
+      color: #38bdf8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .invitation-code {
+      font-size: 13px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .code-num {
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .copy-icon {
+      cursor: pointer;
+      color: #64748b;
+      transition: color 0.2s;
+    }
+
+    .copy-icon:hover {
+      color: #38bdf8;
+    }
+
+    .lang-btn {
+      position: absolute;
+      top: 24px;
+      right: 20px;
+      background: rgba(15, 30, 52, 0.8);
+      border: 1px solid #1e3a60;
+      color: #38bdf8;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    /* Cards Grid Layouts */
+    .section-box {
+      margin: 0 16px 16px 16px;
+      background: linear-gradient(180deg, #0b172a 0%, #081120 100%);
+      border: 1px solid #142847;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-2-divider {
+      position: relative;
+    }
+
+    .grid-2-divider::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 10%;
+      height: 80%;
+      width: 1px;
+      background: #142847;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .stat-val-white {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .action-card {
+      background: #0d1b2e;
+      border: 1px solid #162c4a;
+      border-radius: 10px;
+      padding: 14px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .action-card:hover {
+      background: #11233b;
+    }
+
+    .action-icon {
+      width: 26px;
+      height: 26px;
+      color: #38bdf8;
+    }
+
+    .action-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* Redeem Gift Section */
+    .gift-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .gift-icon-wrapper {
+      width: 38px;
+      height: 38px;
+      background: rgba(2, 132, 199, 0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38bdf8;
+    }
+
+    .gift-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .gift-subtitle {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .gift-input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .gift-input {
+      flex-grow: 1;
+      background: #091322;
+      border: 1px solid #162c4a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      letter-spacing: 1px;
+    }
+
+    .gift-input::placeholder {
+      color: #475569;
+      letter-spacing: normal;
+    }
+
+    .gift-claim-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 0 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .gift-claim-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+
+    /* Secondary Nav List (Bottom of Profile) */
+    .sub-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       FLOATING ACTION BUTTONS
+       ========================================================================== */
+    .floating-widgets {
+      position: fixed;
+      right: calc(50% - 225px);
+      bottom: 85px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      z-index: 90;
+    }
+
+    @media (max-width: 480px) {
+      .floating-widgets {
+        right: 16px;
+      }
+    }
+
+    .floating-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      border: none;
+    }
+
+    .btn-wheel {
+      background: radial-gradient(circle, #e11d48 0%, #9f1239 100%);
+      border: 2px solid #fecdd3;
+    }
+
+    .btn-whatsapp {
+      background: #22c55e;
+      color: white;
+    }
+
+    .btn-scroll-top {
+      background: rgba(15, 30, 52, 0.8);
+      border: 1px solid #1f3a60;
+      color: #94a3b8;
+      width: 36px;
+      height: 36px;
+    }
+
+    /* ==========================================================================
+       BOTTOM NAVIGATION BAR
+       ========================================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: #050a14;
+      border-top: 1px solid #14263e;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 12px 0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #64748b;
+      text-decoration: none;
+      font-size: 11px;
+      cursor: pointer;
+      width: 20%;
+    }
+
+    .nav-item.active {
+      color: #38bdf8;
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    /* ==========================================================================
+       MODALS & TOASTS
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #0d1b2e;
+      border: 1px solid #1e3a60;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 380px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      color: #94a3b8;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 12px;
+      background: #0284c7;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    .toast-msg {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0284c7;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast-msg" id="toast">Copied to clipboard!</div>
+
+  <div class="app-container">
+
+    <!-- ==========================================================================
+         PAGE 1: HOME MARKET (SCREENSHOT 1)
+         ========================================================================== -->
+    <div class="page-view active" id="page-home">
+      <!-- Header Ticker -->
+      <div class="header-ticker">
+        <button class="audio-icon-btn" onclick="toggleAudio()" aria-label="Audio toggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+        </button>
+        <div class="ticker-text">
+          streamlines the entire process and has developed a dynamic algorithm for optimal cloud mining yield...
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="tabs-wrapper">
+        <div class="tabs-list">
+          <button class="tab-btn active" onclick="switchTab(this)">AI</button>
+          <button class="tab-btn" onclick="switchTab(this)">NVIP</button>
+          <button class="tab-btn" onclick="switchTab(this)">Super AI</button>
+          <button class="tab-btn" onclick="switchTab(this)">Limited-Time</button>
+        </div>
+      </div>
+
+      <!-- Main Content Cards List -->
+      <main class="cards-container">
+
+        <!-- Card 1 -->
+        <article class="card" onclick="openLeaseModal('TU117 (GTX 1650 core)', '100 ZAR', '40 ZAR')">
+          <div class="card-header">
+            <h2 class="card-title">TU117 (GTX 1650 core)</h2>
+            <span class="badge-days">2 Days</span>
+          </div>
+          <div class="card-body">
+            <div class="chip-image-container">
+              <svg width="70" height="70" viewBox="0 0 100 100">
+                <rect x="25" y="25" width="50" height="50" rx="4" fill="#0f2942" stroke="#38bdf8" stroke-width="2"/>
+                <rect x="38" y="38" width="24" height="24" rx="2" fill="#0284c7"/>
+                <line x1="35" y1="15" x2="35" y2="25" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="50" y1="15" x2="50" y2="25" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="65" y1="15" x2="65" y2="25" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="35" y1="75" x2="35" y2="85" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="50" y1="75" x2="50" y2="85" stroke="#38bdf8" stroke-width="2"/>
+                <line x1="65" y1="75" x2="65" y2="85" stroke="#38bdf8" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="card-details">
+              <div class="detail-row">
+                <span class="detail-label">Availability:</span>
+                <span class="status-in-stock">In stock</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Purchase Limit:</span>
+                <span class="value-white">--</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Total Revenue:</span>
+                <span class="value-revenue">40 ZAR</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Lease Amount:</span>
+                <span class="value-lease">100 ZAR</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card" onclick="openLeaseModal('GP107 (GTX 1050 Ti core)', '250 ZAR', '125 ZAR')">
+          <div class="card-header">
+            <h2 class="card-title">GP107 (GTX 1050 Ti core)</h2>
+            <span class="badge-days">5 Days</span>
+          </div>
+          <div class="card-body">
+            <div class="chip-image-container">
+              <svg width="70" height="70" viewBox="0 0 100 100">
+                <rect x="25" y="25" width="50" height="50" rx="4" fill="#0f2d38" stroke="#22d3ee" stroke-width="2"/>
+                <rect x="36" y="36" width="28" height="28" rx="2" fill="#0891b2"/>
+                <line x1="15" y1="35" x2="25" y2="35" stroke="#22d3ee" stroke-width="2"/>
+                <line x1="15" y1="50" x2="25" y2="50" stroke="#22d3ee" stroke-width="2"/>
+                <line x1="15" y1="65" x2="25" y2="65" stroke="#22d3ee" stroke-width="2"/>
+                <line x1="75" y1="35" x2="85" y2="35" stroke="#22d3ee" stroke-width="2"/>
+                <line x1="75" y1="50" x2="85" y2="50" stroke="#22d3ee" stroke-width="2"/>
+                <line x1="75" y1="65" x2="85" y2="65" stroke="#22d3ee" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="card-details">
+              <div class="detail-row">
+                <span class="detail-label">Availability:</span>
+                <span class="status-in-stock">In stock</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Purchase Limit:</span>
+                <span class="value-white">0</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Total Revenue:</span>
+                <span class="value-revenue">125 ZAR</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Lease Amount:</span>
+                <span class="value-lease">250 ZAR</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card" onclick="openLeaseModal('Navi 24 (RX 6500 XT kern)', '500 ZAR', '250 ZAR')">
+          <div class="card-header">
+            <h2 class="card-title">Navi 24 (RX 6500 XT kern)</h2>
+            <span class="badge-days">10 Days</span>
+          </div>
+          <div class="card-body">
+            <div class="chip-image-container">
+              <svg width="70" height="70" viewBox="0 0 100 100">
+                <rect x="25" y="25" width="50" height="50" rx="4" fill="#2d1515" stroke="#f43f5e" stroke-width="2"/>
+                <rect x="38" y="38" width="24" height="24" rx="2" fill="#e11d48"/>
+                <line x1="35" y1="15" x2="35" y2="25" stroke="#f43f5e" stroke-width="2"/>
+                <line x1="50" y1="15" x2="50" y2="25" stroke="#f43f5e" stroke-width="2"/>
+                <line x1="65" y1="15" x2="65" y2="25" stroke="#f43f5e" stroke-width="2"/>
+                <line x1="35" y1="75" x2="35" y2="85" stroke="#f43f5e" stroke-width="2"/>
+                <line x1="50" y1="75" x2="50" y2="85" stroke="#f43f5e" stroke-width="2"/>
+                <line x1="65" y1="75" x2="65" y2="85" stroke="#f43f5e" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="card-details">
+              <div class="detail-row">
+                <span class="detail-label">Availability:</span>
+                <span class="status-in-stock">In stock</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Purchase Limit:</span>
+                <span class="value-white">1</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Total Revenue:</span>
+                <span class="value-revenue">250 ZAR</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Lease Amount:</span>
+                <span class="value-lease">500 ZAR</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </main>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE 2: PROFILE DASHBOARD (SCREENSHOT 2)
+         ========================================================================== -->
+    <div class="page-view" id="page-profile">
+      <!-- User Profile Header -->
+      <div class="profile-header">
+        <div class="avatar-glow-ring">
+          <span class="avatar-text">AI</span>
+        </div>
+        <div class="user-info">
+          <div class="user-id">848318963</div>
+          <div class="user-badge-row">
+            <div class="vip-badge">VIP0 &gt;</div>
+          </div>
+          <div class="invitation-code">
+            Invitation Code <span class="code-num" id="invite-code">472566</span>
+            <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" onclick="copyCode()">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </div>
+        </div>
+
+        <button class="lang-btn" onclick="showToast('Language settings opened')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          EN
+        </button>
+      </div>
+
+      <!-- Balance Summary Box -->
+      <div class="section-box">
+        <div class="grid-2">
+          <div class="stat-card grid-2-divider">
+            <div class="stat-val">15</div>
+            <div class="stat-label">Total Balance</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">1,382</div>
+            <div class="stat-label">Total Income</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Accounts Breakdown Box -->
+      <div class="section-box">
+        <div class="grid-2" style="margin-bottom: 16px;">
+          <div class="stat-card grid-2-divider">
+            <div class="stat-val-white">913</div>
+            <div class="stat-label">Recharge Account</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val-white">271</div>
+            <div class="stat-label">Reward Account</div>
+          </div>
+        </div>
+        <div style="height: 1px; background: #142847; margin-bottom: 16px;"></div>
+        <div class="grid-2">
+          <div class="stat-card grid-2-divider">
+            <div class="stat-val-white">990</div>
+            <div class="stat-label">Total Withdraw</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val-white">5</div>
+            <div class="stat-label">Today Income</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Action Buttons Grid -->
+      <div style="margin: 0 16px 16px 16px;">
+        <div class="grid-4">
+          <div class="action-card" onclick="showToast('Opening Recharge Gateway...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+            </svg>
+            <div class="action-title">Recharge</div>
+          </div>
+
+          <div class="action-card" onclick="showToast('Opening Withdrawal Portal...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+            </svg>
+            <div class="action-title">Withdraw</div>
+          </div>
+
+          <div class="action-card" onclick="showToast('Loading Recharge History...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <div class="action-title">Recharge<br>Records</div>
+          </div>
+
+          <div class="action-card" onclick="showToast('Loading Withdraw History...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 8 14"></polyline>
+            </svg>
+            <div class="action-title">Withdraw<br>Records</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gift Code Redemption Box -->
+      <div class="section-box">
+        <div class="gift-header">
+          <div class="gift-icon-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 6h-3.17c.42-.61.67-1.35.67-2.14 0-2.13-1.73-3.86-3.86-3.86-1.5 0-2.79.86-3.41 2.11C9.61.86 8.32 0 6.82 0 4.69 0 2.96 1.73 2.96 3.86c0 .79.25 1.53.67 2.14H.5v5h2v10c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V11h2V6h-1.5zM13.64 3.86c0-1.03.83-1.86 1.86-1.86s1.86.83 1.86 1.86-.83 1.86-1.86 1.86h-1.86V3.86zm-6.82-1.86c1.03 0 1.86.83 1.86 1.86v1.86H6.82c-1.03 0-1.86-.83-1.86-1.86s.83-1.86 1.86-1.86z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="gift-title">Redeem Gift Code</div>
+            <div class="gift-subtitle">Enter code to claim rewards</div>
+          </div>
+        </div>
+        <div class="gift-input-row">
+          <input type="text" class="gift-input" id="gift-code" placeholder="ENTER GIFT CODE" oninput="handleGiftInput(this)">
+          <button class="gift-claim-btn" id="claim-btn" onclick="claimGift()">Claim</button>
+        </div>
+      </div>
+
+      <!-- Secondary Icon Menu -->
+      <div style="margin: 0 16px 16px 16px;">
+        <div class="sub-menu-grid">
+          <div class="action-card" onclick="showToast('Loading Lease History...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <div class="action-title">Lease</div>
+          </div>
+
+          <div class="action-card" onclick="showToast('Loading Analytics...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <div class="action-title">Income</div>
+          </div>
+
+          <div class="action-card" onclick="showToast('Loading Saved Cards...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            <div class="action-title">Bank</div>
+          </div>
+
+          <div class="action-card" onclick="showToast('Loading Team Details...')">
+            <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <polyline points="17 11 19 13 23 9"></polyline>
+            </svg>
+            <div class="action-title">Team</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+         FLOATING WIDGETS & BOTTOM NAVIGATION
+         ========================================================================== -->
+    <div class="floating-widgets">
+      <button class="floating-btn btn-wheel" onclick="showToast('Spin Wheel Feature Coming Soon!')" title="Lucky Spin Wheel">
+        🎯
+      </button>
+
+      <button class="floating-btn btn-whatsapp" onclick="window.open('https://wa.me/', '_blank')" title="Support">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-0.999 3.648 3.742-0.981z"/>
+        </svg>
+      </button>
+
+      <button class="floating-btn btn-scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Scroll to Top">
+        ▲
+      </button>
+    </div>
+
+    <!-- Bottom Nav Bar -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="switchPage('page-home', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M4 11h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zm10 0h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zM4 21h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zm10 0h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1z"/>
+        </svg>
+        <span>Home</span>
+      </div>
+
+      <div class="nav-item" onclick="showToast('Activity view clicked')">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+        <span>Activity</span>
+      </div>
+
+      <div class="nav-item" onclick="showToast('Team view clicked')">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <span>Team</span>
+      </div>
+
+      <div class="nav-item" onclick="showToast('Recharge view clicked')">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+        </svg>
+        <span>Recharge</span>
+      </div>
+
+      <div class="nav-item" onclick="switchPage('page-profile', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        <span>Profile</span>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- Lease Confirmation Modal -->
+  <div class="modal-overlay" id="leaseModal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeLeaseModal()">&times;</span>
+      <h3 id="modalTitle" style="color:#ffffff; margin-bottom: 12px;">Confirm Hardware Lease</h3>
+      <p style="color:#94a3b8; font-size: 14px; margin-bottom: 8px;">Lease Price: <strong id="modalPrice" style="color:#eab308;"></strong></p>
+      <p style="color:#94a3b8; font-size: 14px; margin-bottom: 16px;">Expected Revenue: <strong id="modalRevenue" style="color:#22c55e;"></strong></p>
+      <button class="modal-btn" onclick="confirmLease()">Confirm Lease</button>
+    </div>
+  </div>
+
+  <script>
+    // Page switching
+    function switchPage(pageId, navEl) {
+      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+
+      if (navEl) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        navEl.classList.add('active');
+      }
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // Tab switching
+    function switchTab(element) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // Audio toggle
+    function toggleAudio() {
+      showToast('Audio announcement toggled');
+    }
+
+    // Copy Invite Code
+    function copyCode() {
+      const code = document.getElementById('invite-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Invitation Code copied!');
+      }).catch(() => {
+        showToast('Code: ' + code);
+      });
+    }
+
+    // Gift Input Handler
+    function handleGiftInput(input) {
+      const claimBtn = document.getElementById('claim-btn');
+      if (input.value.trim().length > 0) {
+        claimBtn.classList.add('active');
+      } else {
+        claimBtn.classList.remove('active');
+      }
+    }
+
+    function claimGift() {
+      const input = document.getElementById('gift-code');
+      if (input.value.trim().length > 0) {
+        showToast('Gift Code Redeemed Successfully!');
+        input.value = '';
+        document.getElementById('claim-btn').classList.remove('active');
+      } else {
+        showToast('Please enter a gift code');
+      }
+    }
+
+    // Toast Popup Function
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.innerText = text;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2000);
+    }
+
+    // Lease Modal Interactions
+    function openLeaseModal(title, price, revenue) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalPrice').innerText = price;
+      document.getElementById('modalRevenue').innerText = revenue;
+      document.getElementById('leaseModal').classList.add('active');
+    }
+
+    function closeLeaseModal() {
+      document.getElementById('leaseModal').classList.remove('active');
+    }
+
+    function confirmLease() {
+      showToast('Lease order successfully submitted!');
+      closeLeaseModal();
+    }
+  </script>
+</body>
+</html>
