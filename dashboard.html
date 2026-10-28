@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#064e3b">
+  <title>Customer Dashboard | NEXORA AI</title>
+
+  <style>
+    :root {
+      --green: #064e3b;
+      --green2: #087443;
+      --yellow: #facc15;
+      --light: #f3f7f4;
+      --white: #ffffff;
+      --text: #1d3027;
+      --muted: #6b7c72;
+      --border: #dce7df;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--white);
+      padding: 16px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--green2);
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--green);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .demo-banner {
+      background: #fff7d6;
+      color: #705400;
+      padding: 12px 5%;
+      text-align: center;
+      font-size: 13px;
+      border-bottom: 1px solid #f2df91;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 28px 5% 50px;
+    }
+
+    .welcome {
+      background: linear-gradient(120deg, #064e3b, #087443);
+      color: white;
+      border-radius: 18px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+
+    .welcome h1 {
+      font-size: clamp(25px, 5vw, 34px);
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #e0f2e8;
+      font-size: 14px;
+    }
+
+    .section-title {
+      font-size: 21px;
+      margin: 28px 0 14px;
+      color: var(--green);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(10, 50, 30, 0.04);
+    }
+
+    .card-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .amount {
+      color: var(--green);
+      font-size: 27px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .plan {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .plan h3 {
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    .plan-price {
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .plan ul {
+      padding-left: 19px;
+      color: #52665a;
+      font-size: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 9px;
+      background: var(--green);
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 12px 15px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: var(--green2);
+    }
+
+    button.yellow {
+      background: var(--yellow);
+      color: #26351c;
+    }
+
+    button.yellow:hover {
+      background: #e9b900;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e1f5e8;
+      color: #17653c;
+      border-radius: 30px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status.waiting {
+      background: #fff2c8;
+      color: #775900;
+    }
+
+    .lease-details p {
+      margin: 9px 0;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .lease-details strong {
+      color: var(--green);
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .notice {
+      background: #fff7d6;
+      border: 1px solid #f2df91;
+      color: #705400;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-top: 22px;
+    }
+
+    .history {
+      overflow-wrap: anywhere;
+      font-size: 13px;
+    }
+
+    .history-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    footer {
+      background: var(--green);
+      color: white;
+      text-align: center;
+      padding: 22px 5%;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        align-items: flex-start;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      .welcome {
+        padding: 23px 18px;
+      }
+
+      .amount {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a class="logo" href="index.html" style="text-decoration:none">
+      NEXORA <span>AI</span>
+    </a>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="product.html">Products</a>
+      <a href="#plans">Lease Plans</a>
+    </nav>
+  </header>
+
+  <div class="demo-banner">
+    DEMO MODE — All balances, leases, earnings and cashouts are simulated.
+    No real money is accepted or paid.
+  </div>
+
+  <main>
+    <section class="welcome">
+      <h1>Customer Dashboard</h1>
+      <p>Manage your demo balance, explore lease plans and track a sample lease.</p>
+      <p style="margin-top:12px;font-size:12px">
+        Demo account · No real customer account is connected
+      </p>
+    </section>
+
+    <h2 class="section-title">Account Overview</h2>
+
+    <div class="grid">
+      <div class="card">
+        <p class="card-label">Demo Available Balance</p>
+        <p class="amount" id="balance">R5,000.00</p>
+        <p class="small-note">Fictional demo funds only</p>
+      </div>
+
+      <div class="card">
+        <p class="card-label">Demo Lease Amount</p>
+        <p class="amount" id="leaseAmount">R0.00</p>
+        <p class="small-note">Amount assigned to your sample lease</p>
+      </div>
+
+      <div class="card">
+        <p class="card-label">Demo Earnings</p>
+        <p class="amount" id="earnings">R0.00</p>
+        <p class="small-note">Illustration only, not actual revenue</p>
+      </div>
+    </div>
+
+    <h2 class="section-title" id="plans">Choose a Demo Lease Plan</h2>
+
+    <div class="grid">
+      <article class="card plan">
+        <h3>AI Computing</h3>
+        <p class="plan-price">R500</p>
+        <p class="card-label">Example lease amount · 30-day term</p>
+        <ul>
+          <li>Sample computing lease</li>
+          <li>30-day demo countdown</li>
+          <li>Simulated earnings display</li>
+        </ul>
+        <button onclick="startLease('AI Computing', 500, 30)">
+          Try Demo Lease
+        </button>
+      </article>
+
+      <article class="card plan">
+        <h3>Digital Systems</h3>
+        <p class="plan-price">R1,000</p>
+        <p class="card-label">Example lease amount · 45-day term</p>
+        <ul>
+          <li>Sample digital systems lease</li>
+          <li>45-day demo countdown</li>
+          <li>Simulated earnings display</li>
+        </ul>
+        <button onclick="startLease('Digital Systems', 1000, 45)">
+          Try Demo Lease
+        </button>
+      </article>
+
+      <article class="card plan">
+        <h3>Cloud Technology</h3>
+        <p class="plan-price">R2,000</p>
+        <p class="card-label">Example lease amount · 60-day term</p>
+        <ul>
+          <li>Sample cloud technology lease</li>
+          <li>60-day demo countdown</li>
+          <li>Simulated earnings display</li>
+        </ul>
+        <button onclick="startLease('Cloud Technology', 2000, 60)">
+          Try Demo Lease
+        </button>
+      </article>
+    </div>
+
+    <h2 class="section-title">My Active Lease</h2>
+
+    <section class="card lease-details" id="activeLease">
+      <p class="empty">You have not started a demo lease yet.</p>
+      <p class="small-note">Choose one of the plans above to try the demo.</p>
+    </section>
+
+    <h2 class="section-title">Demo Actions</h2>
+
+    <div class="card">
+      <div class="actions">
+        <button class="yellow" onclick="simulateDeposit()">
+          Simulate Deposit
+        </button>
+        <button onclick="requestCashout()">
+          Try Demo Cashout
+        </button>
+        <button onclick="resetDemo()">
+          Reset Demo
+        </button>
+      </div>
+      <p class="small-note">
+        These buttons only change sample data in this browser.
+        They do not transfer funds or contact a bank.
+      </p>
+    </div>
+
+    <h2 class="section-title">Demo Transaction History</h2>
+
+    <section class="card history" id="history">
+      <p class="empty">No demo transactions yet.</p>
+    </section>
+
+    <div class="notice">
+      <strong>Important:</strong> This is a front-end demonstration only.
+      Data is stored temporarily in this page and is not a secure account
+      system. Earnings are not calculated from real leasing revenue.
+      Cashouts are not real payments. Do not enter banking details or
+      deposit real money.
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>NEXORA AI</strong> · Customer Dashboard Demo</p>
+    <p style="margin-top:6px">
+      © <span id="year"></span> NEXORA AI. Demo only.
+    </p>
+  </footer>
+
+  <script>
+    const INITIAL_BALANCE = 5000;
+
+    let balance = INITIAL_BALANCE;
+    let lease = null;
+    let earnings = 0;
+    let history = [];
+
+    const money = value =>
+      "R" + value.toLocaleString("en-ZA", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+    function addHistory(message) {
+      history.unshift({
+        message,
+        date: new Date().toLocaleString("en-ZA")
+      });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const box = document.getElementById("history");
+
+      if (history.length === 0) {
+        box.innerHTML = '<p class="empty">No demo transactions yet.</p>';
+        return;
+      }
+
+      box.innerHTML = history.map(item =>
+        '<div class="history-item"><strong>' +
+        escapeHTML(item.message) +
+        '</strong><br><span class="small-note">' +
+        escapeHTML(item.date) +
+        '</span></div>'
+      ).join("");
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function render() {
+      document.getElementById("balance").textContent = money(balance);
+      document.getElementById("leaseAmount").textContent =
+        money(lease ? lease.amount : 0);
+      document.getElementById("earnings").textContent = money(earnings);
+
+      const box = document.getElementById("activeLease");
+
+      if (!lease) {
+        box.innerHTML =
+          '<p class="empty">You have not started a demo lease yet.</p>' +
+          '<p class="small-note">Choose one of the plans above to try the demo.</p>';
+        return;
+      }
+
+      const remaining = lease.endTime - Date.now();
+      const completed = remaining <= 0;
+
+      box.innerHTML =
+        '<p><strong>Product:</strong> ' + escapeHTML(lease.name) + '</p>' +
+        '<p><strong>Lease amount:</strong> ' + money(lease.amount) + '</p>' +
+        '<p><strong>Started:</strong> ' + escapeHTML(lease.startDate) + '</p>' +
+        '<p><strong>Ends:</strong> ' + escapeHTML(lease.endDate) + '</p>' +
+        '<p><strong>Status:</strong> <span class="status ' +
+        (completed ? '' : 'waiting') + '">' +
+        (completed ? 'Demo term completed' : 'Demo lease active') +
+        '</span></p>' +
+        '<p><strong>Time remaining:</strong> ' +
+        (completed ? 'Term completed' : formatTime(remaining)) + '</p>' +
+        '<p class="small-note">The countdown is shortened for demonstration.
+        No real earnings accrue during this period.</p>';
+
+      const buttons = document.querySelectorAll(".plan button");
+      buttons.forEach(button => {
+        button.disabled = !!lease;
+      });
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      return days + "d " + hours + "h " +
+        minutes + "m " + seconds + "s";
+    }
+
+    function startLease(name, amount, days) {
+      if (lease) {
+        alert("Finish or reset your current demo lease first.");
+        return;
+      }
+
+      if (balance < amount) {
+        alert("Your demo balance is too low. Try the demo deposit button.");
+        return;
+      }
+
+      const confirmed = confirm(
+        "Start a simulated " + name + " lease for " +
+        money(amount) + " with a " + days +
+        "-day example term? No real money will be used."
+      );
+
+      if (!confirmed) return;
+
+      balance -= amount;
+
+      // One demo day lasts 10 seconds so the countdown can be tested.
+      const demoDuration = days * 10 * 1000;
+      const startTime = Date.now();
+
+      lease = {
+        name,
+        amount,
+        days,
+        startTime,
+        endTime: startTime + demoDuration,
+        startDate: new Date(startTime).toLocaleString("en-ZA"),
+        endDate: new Date(startTime + demoDuration).toLocaleString("en-ZA"),
+        cashoutDone: false
+      };
+
+      earnings = 0;
+      addHistory("Started simulated lease: " + name + " (" + money(amount) + ")");
+      render();
+    }
+
+    function simulateDeposit() {
+      const amount = 1000;
+
+      const confirmed = confirm(
+        "Add R1,000 in fictional demo funds? This does not process a real payment."
+      );
+
+      if (!confirmed) return;
+
+      balance += amount;
+      addHistory("Simulated demo deposit: " + money(amount));
+      render();
+      alert("Demo balance updated. No payment was made.");
+    }
+
+    function requestCashout() {
+      if (!lease) {
+        alert("Start a demo lease before trying the cashout feature.");
+        return;
+      }
+
+      if (Date.now() < lease.endTime) {
+        alert(
+          "Your demo lease has not ended yet. Wait for the countdown to finish."
+        );
+        return;
+      }
+
+      if (lease.cashoutDone) {
+        alert("The demo cashout has already been completed.");
+        return;
+      }
+
+      // No invented profit: this demo returns the simulated lease amount only.
+      const payout = lease.amount;
+
+      const confirmed = confirm(
+        "Simulate cashout of " + money(payout) +
+        "? This is a fictional demonstration, not a real payment."
+      );
+
+      if (!confirmed) return;
+
+      balance += payout;
+      lease.cashoutDone = true;
+
+      addHistory("Simulated cashout completed: " + money(payout));
+      render();
+
+      alert(
+        "Demo cashout complete. The fictional amount was added to the demo balance. No money was transferred."
+      );
+    }
+
+    function resetDemo() {
+      const confirmed = confirm(
+        "Reset all demo balances, leases and transaction history?"
+      );
+
+      if (!confirmed) return;
+
+      balance = INITIAL_BALANCE;
+      lease = null;
+      earnings = 0;
+      history = [];
+
+      renderHistory();
+      render();
+
+      document.querySelectorAll(".plan button").forEach(button => {
+        button.disabled = false;
+      });
+
+      alert("Demo reset complete.");
+    }
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    render();
+
+    // Refresh the countdown once per second.
+    setInterval(() => {
+      if (lease && Date.now() >= lease.endTime && !lease.cashoutDone) {
+        render();
+      } else if (lease) {
+        render();
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
