@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard | NEXORA AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f7f4;
+      color: #24352b;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #e1e9e3;
+    }
+
+    .logo {
+      color: #06452f;
+      font-size: 21px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #168653;
+    }
+
+    .home-link {
+      color: #075b3b;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .welcome {
+      background: #075b3b;
+      color: white;
+      padding: 32px 6%;
+    }
+
+    .welcome p {
+      color: #d9eee2;
+      margin-top: 5px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 28px 5%;
+    }
+
+    .section-title {
+      color: #06452f;
+      margin-bottom: 16px;
+      font-size: 21px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border: 1px solid #e1e9e3;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 50, 25, 0.04);
+    }
+
+    .card-label {
+      color: #647168;
+      font-size: 13px;
+    }
+
+    .card h3 {
+      color: #06452f;
+      font-size: 25px;
+      margin: 8px 0;
+    }
+
+    .demo-label {
+      display: inline-block;
+      background: #fff1b8;
+      color: #644b00;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .action-link {
+      display: block;
+      text-align: center;
+      background: #075b3b;
+      color: white;
+      padding: 13px 10px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .action-link.secondary {
+      background: #f4c430;
+      color: #24352b;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e1e9e3;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    .panel p {
+      color: #647168;
+      font-size: 14px;
+      margin: 7px 0;
+    }
+
+    .empty-state {
+      background: #f3f7f4;
+      border-radius: 8px;
+      padding: 18px;
+      text-align: center;
+      color: #647168;
+      font-size: 14px;
+    }
+
+    footer {
+      background: #063d2b;
+      color: white;
+      text-align: center;
+      padding: 22px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 420px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome {
+        padding: 26px 6%;
+      }
+
+      .container {
+        padding: 23px 5%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a class="logo" href="index.html">NEXORA <span>AI</span></a>
+    <a class="home-link" href="index.html">← Homepage</a>
+  </header>
+
+  <section class="welcome">
+    <p>CUSTOMER PORTAL</p>
+    <h1>My Dashboard</h1>
+    <p>Welcome to your NEXORA AI account area.</p>
+  </section>
+
+  <main class="container">
+
+    <h2 class="section-title">Account Overview</h2>
+
+    <div class="cards">
+      <article class="card">
+        <p class="card-label">My Products</p>
+        <h3>0</h3>
+        <span class="demo-label">DEMO DATA</span>
+      </article>
+
+      <article class="card">
+        <p class="card-label">Account Status</p>
+        <h3>Preview</h3>
+        <span class="demo-label">NOT CONNECTED</span>
+      </article>
+    </div>
+
+    <h2 class="section-title">Quick Actions</h2>
+
+    <div class="actions">
+      <a class="action-link" href="index.html#products">
+        Browse Products
+      </a>
+
+      <a class="action-link secondary" href="#activity">
+        View Activity
+      </a>
+    </div>
+
+    <section class="panel" id="activity">
+      <h2 class="section-title">Recent Activity</h2>
+      <div class="empty-state">
+        No activity to display yet.
+        <br>
+        Customer activity will appear here when a secure account system is connected.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Account Information</h2>
+      <p><strong>Customer:</strong> Demo account</p>
+      <p><strong>Login:</strong> Not connected yet</p>
+      <p><strong>Transactions:</strong> Not connected yet</p>
+      <p>This preview does not store personal information or process payments.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 NEXORA AI</p>
+    <p>Customer dashboard preview</p>
+  </footer>
+
+</body>
+</html>
