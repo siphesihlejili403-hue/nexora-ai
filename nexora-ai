@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to NEXORA AI. Explore our technology product catalogue.">
+  <title>NEXORA AI | Technology Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a class="logo" href="index.html">NEXORA <span>AI</span></a>
+    <a class="login-button" href="#account">Login</a>
+  </header>
+
+  <nav class="navigation">
+    <a href="#home">Home</a>
+    <a href="#products">Products</a>
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <p class="eyebrow">WELCOME TO NEXORA AI</p>
+        <h1>Technology for a smarter future.</h1>
+        <p>Explore our technology catalogue and discover products designed for tomorrow.</p>
+        <a class="cta-button" href="#products">Explore Products</a>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <p class="eyebrow">EXPLORE OUR CATALOGUE</p>
+      <h2>Featured Products</h2>
+      <p class="section-description">Browse our sample technology collection.</p>
+
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-icon">◈</div>
+          <h3>AI Computing</h3>
+          <p>Explore computing technology and AI infrastructure.</p>
+          <a href="#contact" class="product-button">View Details</a>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">▤</div>
+          <h3>Digital Systems</h3>
+          <p>Discover tools for modern digital workflows.</p>
+          <a href="#contact" class="product-button">View Details</a>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">⬡</div>
+          <h3>Cloud Technology</h3>
+          <p>Learn about cloud services and computing solutions.</p>
+          <a href="#contact" class="product-button">View Details</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="about-section" id="about">
+      <h2>About NEXORA AI</h2>
+      <p>Our goal is to make exploring technology simple, clear and accessible.</p>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <h2>Contact Us</h2>
+      <p>Interested in our products? Contact our team for more information.</p>
+      <a class="cta-button" href="mailto:info@example.com">Send an Enquiry</a>
+      <p class="note">Sample contact address — replace this before launch.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 NEXORA AI. All rights reserved.</p>
+    <p>Technology and product information platform.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
